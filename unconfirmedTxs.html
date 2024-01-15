@@ -1,0 +1,63 @@
+---
+layout: default
+---
+
+<div class="container">
+  <canvas id="myChart"></canvas>
+</div>
+
+{% include jquery.html %}
+{% include chartsjs.html %}
+
+<script>
+
+const labels = [];
+
+const data = {
+  labels: labels,
+  datasets: [{
+    type: 'line',
+    label: 'Unconfirmed Transactions',
+    backgroundColor: 'rgb(15, 81, 50)',
+    borderColor: 'rgb(15, 81, 50)',
+    data: [],
+  }]
+};
+
+const config = {
+  data: data,
+  options: {}
+};
+
+const myChart = new Chart(
+  document.getElementById('myChart'),
+  config
+);
+
+  $(document).ready(function() {
+
+    setInterval(function() {
+      $.ajax({
+        dataType: "json",
+        url: "https://sei-m.rpc.n0ok.net/num_unconfirmed_txs",
+        success: function(result) {
+          const liveDate = new Date(Date.now());
+          const unconfirmedTxs = result.total;
+
+          if (myChart.data.labels.length == 4000) {
+            myChart.data.labels.shift();
+            myChart.data.datasets.forEach((dataset) => {
+                dataset.data.shift();
+            });
+          }
+
+          myChart.data.labels.push(liveDate);
+          myChart.data.datasets[0].data.push(unconfirmedTxs);
+          myChart.update();
+
+          console.log(unconfirmedTxs)
+
+      }});
+    }, 1500);
+  });
+</script>
