@@ -55,6 +55,8 @@ const myChart = new Chart(
           myChart.data.datasets[0].data.push(unconfirmedTxs);
           myChart.update();
 
+          $("title").html(unconfirmedTxs + " Unconfirmed")
+
           console.log(unconfirmedTxs)
 
       }});
