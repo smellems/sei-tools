@@ -1,7 +1,7 @@
 const { getCosmWasmClient } = require("@sei-js/core")
 require("dotenv").config()
 
-const nftContract = "sei15kry55jvrg3auca9hkwh3yqtsmhg92hcmt7ze9vz5l6kg2mtaw3sqnc5qe"     // The Collection to check
+const nftContract = "sei164t32ynsxdft4n2e0r9geacwfgjzammj9vuh4ayfqew7ywdz7wds7fvxvv"     // The Collection to check
 
 const minterContract = "sei1hjsqrfdg2hvwl3gacg4fkznurf36usrv7rkzkyh29wz3guuzeh0snslz7d"  // Lighthouse contract
 

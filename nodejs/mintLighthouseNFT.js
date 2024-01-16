@@ -3,8 +3,8 @@ const { SigningCosmWasmClient } = require("@cosmjs/cosmwasm-stargate")
 const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing")
 require("dotenv").config()
 
-const nftContract = "sei15kry55jvrg3auca9hkwh3yqtsmhg92hcmt7ze9vz5l6kg2mtaw3sqnc5qe"     // The NFT to mint
-const TxFee = "120000"              // Transaction fee: 50000 = 0.050000 SEI
+const nftContract = "sei164t32ynsxdft4n2e0r9geacwfgjzammj9vuh4ayfqew7ywdz7wds7fvxvv"     // The NFT to mint
+const TxFee = "80000"              // Transaction fee: 50000 = 0.050000 SEI
 const gasLimit = "600000"           // Max gas for transaction
 
 const minterContract = "sei1hjsqrfdg2hvwl3gacg4fkznurf36usrv7rkzkyh29wz3guuzeh0snslz7d"  // Lighthouse contract
@@ -49,7 +49,8 @@ async function main() {
     }
   }
 
-  const delay = mintStartTimeMs - new Date.now()
+  const liveDate = Date.now()
+  const delay = mintStartTimeMs - Date.now()
   console.log("Started at:", new Date(Date.now()), "Minting", colName, "at:", new Date(mintStartTimeMs))
   console.log("Mint group:", mintGroup, "in", delay, "ms")
 
