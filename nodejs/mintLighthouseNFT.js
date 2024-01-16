@@ -1,11 +1,10 @@
+const { getCosmWasmClient } = require("@sei-js/core")
 const { SigningCosmWasmClient } = require("@cosmjs/cosmwasm-stargate")
 const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing")
 require("dotenv").config()
 
-const nftContract = "sei16zt75829qyqx26smgcp4qktsqdkhhfqd6v0mwd43xl7ytyw5fsnqycf70u"     // The NFT to mint
-const mintGroup = "Public"                                                               // Group (case sensitive)
-const startEpochTime = 1705348800   // Start date/time in seconds
-const TxFee = "250000"              // Transaction fee: 50000 = 0.050000 SEI
+const nftContract = "sei15kry55jvrg3auca9hkwh3yqtsmhg92hcmt7ze9vz5l6kg2mtaw3sqnc5qe"     // The NFT to mint
+const TxFee = "120000"              // Transaction fee: 50000 = 0.050000 SEI
 const gasLimit = "600000"           // Max gas for transaction
 
 const minterContract = "sei1hjsqrfdg2hvwl3gacg4fkznurf36usrv7rkzkyh29wz3guuzeh0snslz7d"  // Lighthouse contract
@@ -20,6 +19,20 @@ async function main() {
 
   const mintWalletAccount = await mintWallet.getAccounts()
   const mintWalletAddress = mintWalletAccount[0].address
+
+  // Get collection info
+  const cosmWasmClient = await getCosmWasmClient(rpcURL)
+  const queryMsg = {
+    get_collection: {
+      collection: nftContract
+    }
+  }
+  const collectionInfo = await cosmWasmClient.queryContractSmart(minterContract, queryMsg)
+
+  const colName = collectionInfo.name
+  // Last group usually public and time in seconds - double check
+  const mintGroup = collectionInfo.mint_groups[collectionInfo.mint_groups.length-1].name
+  const mintStartTimeMs = collectionInfo.mint_groups[collectionInfo.mint_groups.length-1].start_time * 1000
 
   const gasFees = {
     amount: [{ denom: "usei", amount: TxFee }],
@@ -36,17 +49,16 @@ async function main() {
     }
   }
 
+  const delay = mintStartTimeMs - new Date.now()
+  console.log("Started at:", new Date(Date.now()), "Minting", colName, "at:", new Date(mintStartTimeMs))
+  console.log("Mint group:", mintGroup, "in", delay, "ms")
+
   // Wait for mint time
-  const liveTime = Date.now();
-  const mintTime = startEpochTime * 1000
-  const delay = mintTime - liveTime
   if (delay > 0) {
-    console.log("Started at:", new Date(liveTime), "Minting at:", new Date(mintTime), "In", delay, "ms")
     await new Promise(resolve => setTimeout(resolve, delay))
   }
 
-  const liveMintTime = Date.now()
-  console.log("Send it!", liveMintTime, new Date(liveMintTime))
+  console.log("Send it!", new Date(Date.now()), msg)
 
   // Sign and Mint
   const signingClient = await SigningCosmWasmClient.connectWithSigner(rpcURL, mintWallet)
