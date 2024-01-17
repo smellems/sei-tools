@@ -1,7 +1,7 @@
 const { getCosmWasmClient } = require("@sei-js/core")
 require("dotenv").config()
 
-const nftContract = "sei164t32ynsxdft4n2e0r9geacwfgjzammj9vuh4ayfqew7ywdz7wds7fvxvv"     // The Collection to check
+const nftContract = "sei1xlpqvmg6pwxw0550hjq986hp9rwz8ek73qw9hg0zj60sznm0kxnqjaxdfq"     // The Collection to check
 
 const minterContract = "sei1hjsqrfdg2hvwl3gacg4fkznurf36usrv7rkzkyh29wz3guuzeh0snslz7d"  // Lighthouse contract
 
@@ -32,10 +32,13 @@ async function main() {
   console.log("Dagora:          https://dagora.xyz/collection/seiMainnet/" + nftContract)
   console.log("Pallet:          https://pallet.exchange/collection/" + String(collectionInfo.name).toLowerCase().replaceAll(" ", "-"))
   console.log("Mint Groups:")
-
-  collectionInfo.mint_groups.forEach((group) => console.log("  ", group.name, ":", group.unit_price, "SEI - from", new Date(group.start_time*1000), "to", new Date(group.end_time*1000)))
+  collectionInfo.mint_groups.forEach((group) =>
+    console.log("  ", group.name, ":", (group.unit_price > 0 ? group.unit_price/1000000 : group.unit_price), "SEI", "\n",
+                "      ", new Date(group.start_time*1000), "to", new Date(group.end_time*1000), "\n",
+                "      ", "Max mint:", group.max_tokens, "\n",
+                "      ", "Merkle root:", (!group.merkle_root ? "Null -> Open mint!" : "Private mint.")
+                ))
 
 }
 
 main()
-
