@@ -4,7 +4,7 @@ const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing")
 require("dotenv").config()
 
 const nftContract = "sei1ueznkdkldf4yd88f7fr0qv4xustz735tzavvc888ca0cvdxu9q7szn7969"  // The NFT to mint
-const TxFee = 127000             // Transaction (gas) fee: 50000 = 0.050000 SEI
+const TxFee = 50000              // Transaction (gas) fee: 50000 = 0.050000 SEI
 const gasBase = 150000           // Base gas
 const gasMultiplier = 300000     // For each additionnal NFT add Multiplier: 150000 + 300000
 const maxMintAmount = 2          // The max amount of NFTs to mint in one transaction
